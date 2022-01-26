@@ -216,6 +216,9 @@ func (s *DataStore) CreatePod(pod *corev1.Pod) (*corev1.Pod, error) {
 
 // DeletePod deletes Pod for the given name and namespace
 func (s *DataStore) DeletePod(name string) error {
+	if strings.HasPrefix(name, "instance-manager-r-") {
+		return fmt.Errorf("Cannot delete replica instance manager: %v", name)
+	}
 	return s.kubeClient.CoreV1().Pods(s.namespace).Delete(context.TODO(), name, metav1.DeleteOptions{})
 }
 
